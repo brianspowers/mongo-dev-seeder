@@ -1,0 +1,33 @@
+{
+  "name": "mongodb-atlas-local-seed",
+  "version": "1.0.0",
+  "description": "Cross-platform utility to dump MongoDB Atlas and seed a local MongoDB Docker instance for testing",
+  "main": "scripts/env.js",
+  "scripts": {
+    "dump": "node scripts/dump.js",
+    "up": "docker compose up -d mongodb",
+    "down": "docker compose down",
+    "down:wipe": "docker compose down -v",
+    "seed": "node scripts/seed.js",
+    "reset": "node scripts/reset.js",
+    "mongosh": "node scripts/mongosh.js",
+    "gui": "docker compose --profile gui up -d",
+    "gui:down": "docker compose --profile gui down",
+    "logs": "docker compose logs -f mongodb",
+    "status": "docker compose ps"
+  },
+  "keywords": [
+    "mongodb",
+    "atlas",
+    "docker",
+    "mongodump",
+    "mongorestore",
+    "testing",
+    "seed"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^16.4.7"
+  }
+}

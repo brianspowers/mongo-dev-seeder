@@ -1,0 +1,43 @@
+services:
+  mongodb:
+    image: ${MONGO_IMAGE:-mongo:7.0}
+    container_name: ${LOCAL_MONGO_CONTAINER_NAME:-mongodb-local}
+    restart: unless-stopped
+    ports:
+      - "${LOCAL_MONGO_PORT:-27017}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${LOCAL_MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${LOCAL_MONGO_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+      - ./dump:/dump
+    networks:
+      - mongodb_net
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: ${LOCAL_MONGO_CONTAINER_NAME:-mongodb-local}-express
+    restart: unless-stopped
+    ports:
+      - "${MONGO_EXPRESS_PORT:-8081}:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${LOCAL_MONGO_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${LOCAL_MONGO_PASSWORD}
+      ME_CONFIG_BASICAUTH: "false"
+    networks:
+      - mongodb_net
+    profiles:
+      - gui
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo_data:
+    name: ${LOCAL_MONGO_CONTAINER_NAME:-mongodb-local}_data
+
+networks:
+  mongodb_net:
+    name: ${LOCAL_MONGO_CONTAINER_NAME:-mongodb-local}_net
